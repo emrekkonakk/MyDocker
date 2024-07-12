@@ -1,0 +1,27 @@
+name: Docker Build on Tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    name: Build and Push Docker Image on Tag
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: emrekonak
+          password: ${{ secrets.docker_token }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: emrekonak/python-test:${{ github.ref_name }}
