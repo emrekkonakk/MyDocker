@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import os
 import sys
-from Backend.db import db
+from db import db
 from resources.restaurantclass import RestaurantListResource, SingleRestaurantResource
 from resources.cityclass import CityListResource, SingleCityResource
 from resources.countryclass import CountryResource
@@ -16,11 +16,14 @@ from models.restaurant import Restaurant, register_restaurant_commands
 from models.user_review import UserReview, register_user_review_commands
 from models.user import User, register_user_commands
 
+from flask_cors import CORS
+
 
 def create_app():
     print(sys.path)
     app = Flask(__name__)
     api = Api(app)
+    CORS(app)
 
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", 'default_secret_key')
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL",

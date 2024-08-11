@@ -2,7 +2,7 @@ from flask import current_app, request
 from flask_restful import Resource, reqparse, abort
 from models.user_review import UserReview
 from models.restaurant import Restaurant
-from Backend.db import db
+from db import db
 import datetime
 
 

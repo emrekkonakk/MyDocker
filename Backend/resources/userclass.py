@@ -1,7 +1,7 @@
 from flask import current_app
 from flask_restful import Resource, reqparse
 from models.user import User
-from Backend.db import db
+from db import db
 
 
 class UserResource(Resource):

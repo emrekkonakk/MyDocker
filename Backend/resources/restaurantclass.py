@@ -2,7 +2,7 @@ from flask import current_app
 from flask_restful import Resource, reqparse, abort
 from models.restaurant import Restaurant
 from models.city import City
-from Backend.db import db
+from db import db
 
 
 class RestaurantListResource(Resource):

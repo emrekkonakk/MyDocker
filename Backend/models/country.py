@@ -1,4 +1,4 @@
-from Backend.db import db
+from db import db
 
 
 class Country(db.Model):
