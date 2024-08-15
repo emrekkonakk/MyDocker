@@ -32,6 +32,11 @@ class UserReview(db.Model):
 
         db.session.add(new_review)
         db.session.commit()
+
+        restaurant = Restaurant.query.get(restaurant_id)
+        if restaurant:
+            restaurant.update_ratings()  # Recalculate the ratings
+
         return new_review
 
     def update_review(self, comment=None, rating=None):

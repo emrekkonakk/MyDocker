@@ -25,14 +25,12 @@ class Restaurant(db.Model):
         return str(self.userrating)
 
     def update_ratings(self):
-        try:
-            all_ratings = [review.rating for review in self.reviews if review.rating is not None]
-            if all_ratings:
-                self.userrating = sum(all_ratings) / len(all_ratings)
-                db.session.commit()
-        except Exception as e:
-            print(f"Error updating restaurant rating: {e}")
-            db.session.rollback()
+        ratings = [review.rating for review in self.reviews if review.rating is not None]
+        if ratings:
+            self.userrating = sum(ratings) / len(ratings)
+        else:
+            self.userrating = None
+        db.session.commit()
 
 
 def register_restaurant_commands(app):

@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, request
 from flask_restful import Resource, reqparse, abort
 from models.restaurant import Restaurant
 from models.city import City
@@ -7,15 +7,34 @@ from db import db
 
 class RestaurantListResource(Resource):
     def get(self, city_id=None):
+        sort_order = request.args.get('sort')
+        sort_type = request.args.get('type', 'name')  # Default sort by name
+
         if city_id:
-            restaurants = Restaurant.query.filter_by(city_id=city_id).all()
+            query = Restaurant.query.filter_by(city_id=city_id)
+            if sort_order == 'desc':
+                if sort_type == 'rating':
+                    query = query.order_by(Restaurant.userrating.desc())
+                else:
+                    query = query.order_by(Restaurant.name.desc())
+            else:
+                if sort_type == 'rating':
+                    query = query.order_by(Restaurant.userrating.asc())
+                else:
+                    query = query.order_by(Restaurant.name.asc())
+
+            restaurants = query.all()
             if restaurants:
-                return [{'id': restaurant.id, 'name': restaurant.name,
-                        'city_id': restaurant.city_id} for restaurant in restaurants], 200
+                return [{
+                    'id': restaurant.id,
+                    'name': restaurant.name,
+                    'userrating': restaurant.userrating or "Not Rated",
+                    'city_id': restaurant.city_id
+                } for restaurant in restaurants], 200
             else:
                 return {'message': 'No restaurants found in this city'}, 404
         else:
-            abort(400, message="City ID is required for this endpoint.")
+            return {'message': 'City ID is required for this endpoint.'}, 400
 
     def post(self, city_id):
         parser = reqparse.RequestParser()
