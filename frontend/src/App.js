@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import RestaurantDetails from './RestaurantDetails';
 import './App.css';
+
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -73,48 +76,55 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}>
-          <option value="">Select a country</option>
-          {countries.map(country => <option key={country.id} value={country.id}>{country.name}</option>)}
-        </select>
-        <select value={selectedCity} onChange={e => setSelectedCity(e.target.value)} disabled={!selectedCountry}>
-          <option value="">Select a city</option>
-          {cities.map(city => <option key={city.id} value={city.id}>{city.name}</option>)}
-        </select>
-        <select value={sortType} onChange={e => setSortType(e.target.value)}>
-          <option value="name">Sort by Name</option>
-          <option value="rating">Sort by Rating</option>
-        </select>
-        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-        {selectedCity && (
-          <>
-            <input
-              type="text"
-              placeholder="New restaurant name"
-              value={newRestaurantName}
-              onChange={e => setNewRestaurantName(e.target.value)}
-            />
-            <button onClick={handleAddRestaurant}>Add Restaurant</button>
-          </>
-        )}
-        {restaurants.length ? (
-          <ul>
-            {restaurants.map(restaurant => (
-              <li key={restaurant.id}>
-                {restaurant.name} - {restaurant.userrating || 'Not Rated'}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No restaurants found or selected.</p>
-        )}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}>
+            <option value="">Select a country</option>
+            {countries.map(country => <option key={country.id} value={country.id}>{country.name}</option>)}
+          </select>
+          <select value={selectedCity} onChange={e => setSelectedCity(e.target.value)} disabled={!selectedCountry}>
+            <option value="">Select a city</option>
+            {cities.map(city => <option key={city.id} value={city.id}>{city.name}</option>)}
+          </select>
+          <select value={sortType} onChange={e => setSortType(e.target.value)}>
+            <option value="name">Sort by Name</option>
+            <option value="rating">Sort by Rating</option>
+          </select>
+          <select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+          {selectedCity && (
+            <>
+              <input
+                type="text"
+                placeholder="New restaurant name"
+                value={newRestaurantName}
+                onChange={e => setNewRestaurantName(e.target.value)}
+              />
+              <button onClick={handleAddRestaurant}>Add Restaurant</button>
+            </>
+          )}
+          {restaurants.length ? (
+            <ul>
+              {restaurants.map(restaurant => (
+                <li key={restaurant.id}>
+                  <Link to={`/restaurants/${restaurant.id}`}>
+                    {restaurant.name} - {restaurant.userrating || 'Not Rated'}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No restaurants found or selected.</p>
+          )}
+        </header>
+        <Routes>
+          <Route path="/restaurants/:restaurantId" element={<RestaurantDetails />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
