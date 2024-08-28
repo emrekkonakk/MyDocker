@@ -27,7 +27,7 @@ def fetch_place_id(place_name):
         'input': place_name,
         'inputtype': 'textquery',
         'fields': 'place_id',
-        'key': 'AIzaSyBgxIkH8G5PEJxSLw-lejT9jL3ttNBkDm8'
+        'key': api_key
     }
     response = requests.get(url, params=params)
     if response.status_code == 200 and response.json().get('status') == 'OK':
